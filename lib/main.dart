@@ -1,7 +1,10 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
+import 'package:dio_practice/base_url.dart';
 import 'package:dio_practice/client/dio_client.dart';
-import 'package:dio_practice/model/User_response.dart';
+import 'package:dio_practice/model/Translate_response.dart';
+import 'package:dio_practice/model/translator_request_model.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -64,15 +67,30 @@ class _MyHomePageState extends State<MyHomePage> {
       _counter++;
     });
   }
-  UserResponse userResponse = UserResponse();
+  TranslateResponse translateResponse = TranslateResponse();
    _getDataFromServer(){
     DioClient dioClient = DioClient();
-    var request = dioClient.initDio("https://jsonplaceholder.typicode.com/");
-    request.get("todos/1").then((value){
-      var data = jsonDecode(value.data);
-      userResponse = UserResponse.fromJson(data);
-      print("RESPONSE+_${userResponse.title}");
+    var request = dioClient.initDio(provideBaseURL());
+    RequestModel requestModel = RequestModel("en", "bn", "how are you");
+
+    FormData formData = FormData.fromMap({
+      'source_language': "en",
+      'target_language': "bn",
+      'text': "how are you"
     });
+    try{
+      request.post("translate", data: {
+        'source_language': 'en',
+        'target_language': 'id',
+        'text': 'What is your name?'
+      }).then((value) {
+        var data = jsonDecode(value.data);
+        translateResponse = TranslateResponse.fromJson(data);
+        print("RESPONSE+_${translateResponse.data!.translatedText!.toString()}");
+      });
+    } catch (e){
+      print("RESPONSE+_${e.toString()}");
+    }
    }
   @override
   Widget build(BuildContext context) {
