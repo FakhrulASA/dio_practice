@@ -47,6 +47,7 @@ class StoragePref {
 // Future<Authorizations> getAuthorization() async {
 //   StoragePref storage = StoragePref();
 //   Authorizations authorizations = Authorizations();
+// storage.setString("key", "value");
 //   String? accessToken = await storage.getString(AUTHORIZATION_TOKEN);
 //   authorizations.authorization_token =
 //   accessToken == null ? "" : "JWT " + accessToken;
