@@ -68,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
   TranslateResponse translateResponse = TranslateResponse();
-   _getDataFromServer(){
+   _getDataFromServer() async{
     DioClient dioClient = DioClient();
     var request = dioClient.initDio(provideBaseURL());
     RequestModel requestModel = RequestModel("en", "bn", "how are you");
@@ -79,17 +79,17 @@ class _MyHomePageState extends State<MyHomePage> {
       'text': "how are you"
     });
     try{
-      request.post("translate", data: {
+      await request.post("translate/", data: {
         'source_language': 'en',
         'target_language': 'id',
         'text': 'What is your name?'
-      }).then((value) {
-        var data = jsonDecode(value.data);
+      }).then((datas) {
+        var data = jsonDecode(datas.data);
         translateResponse = TranslateResponse.fromJson(data);
-        print("RESPONSE+_${translateResponse.data!.translatedText!.toString()}");
+        print("RESPONSEERROR+_${translateResponse.data!.translatedText!.toString()}");
       });
     } catch (e){
-      print("RESPONSE+_${e.toString()}");
+      print("RESPONSEERR+_${e.toString()}");
     }
    }
   @override
@@ -109,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: GestureDetector(onTap:(){_getDataFromServer();},child: Text("GET RESPONSE")),
+        child: GestureDetector(onTap:(){_getDataFromServer();},child: const Text("GET RESPONSE")),
       ),
     // This trailing comma makes auto-formatting nicer for build methods.
     );
